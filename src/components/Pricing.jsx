@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
+const BACKEND = import.meta.env.VITE_API_URL ||
+                'https://whatswebmulti-backend.onrender.com'
+
+
 const PLANS = [
   {
     name:     'Free',
