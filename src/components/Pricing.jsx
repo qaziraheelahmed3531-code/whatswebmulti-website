@@ -93,7 +93,7 @@ export default function Pricing() {
       // ✅ FIX 1: BACKEND variable use kiya
       // ✅ FIX 2: Correct route /api/orders use kiya
       // ✅ FIX 3: Correct field names (name, email, plan)
-      const { data } = await axios.post(`${BACKEND}/api/orders`, {
+      const { data } = await axios.post(`${BACKEND}/orders`, {
         plan:  plan.plan,
         name:  form.name,
         email: form.email,
