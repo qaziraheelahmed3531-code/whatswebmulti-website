@@ -90,18 +90,41 @@ export default function Pricing() {
     }
     setLoading(plan.plan)
     try {
-      const { data } = await axios.post('/api/payment/create-checkout', {
-        plan:      plan.plan,
-        userName:  form.name,
-        userEmail: form.email,
+      // ✅ FIX 1: BACKEND variable use kiya
+      // ✅ FIX 2: Correct route /api/orders use kiya
+      // ✅ FIX 3: Correct field names (name, email, plan)
+      const { data } = await axios.post(`${BACKEND}/api/orders`, {
+        plan:  plan.plan,
+        name:  form.name,
+        email: form.email,
       })
+
       if (data.success) {
-        window.location.href = data.checkoutUrl
+        // License key mili - show success
+        toast.success(`🎉 License Key: ${data.licenseKey}`, {
+          duration: 15000,
+        })
+
+        // Optional: Copy to clipboard
+        navigator.clipboard.writeText(data.licenseKey).then(() => {
+          toast.success('📋 License key copied to clipboard!')
+        })
+
+        // Show full details
+        alert(
+          `✅ Order Successful!\n\n` +
+          `Order ID: ${data.orderId}\n` +
+          `Plan: ${data.plan}\n` +
+          `Accounts: ${data.accounts}\n` +
+          `License Key: ${data.licenseKey}\n\n` +
+          `${data.emailSent ? '📧 License also sent to your email!' : '⚠️ Save this key - email not configured'}`
+        )
       } else {
-        toast.error(data.message)
+        toast.error(data.message || 'Something went wrong')
       }
-    } catch {
-      toast.error('Server error. Please try again.')
+    } catch (err) {
+      console.error('Payment Error:', err)
+      toast.error(err.response?.data?.message || 'Server error. Please try again.')
     } finally {
       setLoading(null)
     }
